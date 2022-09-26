@@ -1,6 +1,7 @@
 package my.entity;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Role {
@@ -11,6 +12,8 @@ public class Role {
     @Basic
     @Column(name = "name", nullable = false, length = 255)
     private String name;
+    @OneToMany(mappedBy = "roleByRoleId")
+    private Collection<User> usersById;
 
     public Integer getId() {
         return id;
@@ -46,5 +49,13 @@ public class Role {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    public Collection<User> getUsersById() {
+        return usersById;
+    }
+
+    public void setUsersById(Collection<User> usersById) {
+        this.usersById = usersById;
     }
 }

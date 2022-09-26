@@ -17,7 +17,7 @@ public class UserSignupDto {
     private String username;
 
     public User getUser() {
-        return new User(this.email, this.username, this.password, 2);
+        return new User(this.email, this.username, this.password);
     }
 
     public String getEmail() {

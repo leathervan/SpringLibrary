@@ -1,6 +1,7 @@
 package my.entity;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "receipt_status", schema = "spring_library", catalog = "")
@@ -12,6 +13,8 @@ public class ReceiptStatus {
     @Basic
     @Column(name = "name", nullable = false, length = 255)
     private String name;
+    @OneToMany(mappedBy = "receiptStatusByReceiptStatusId")
+    private Collection<Receipt> receiptsById;
 
     public Integer getId() {
         return id;
@@ -47,5 +50,13 @@ public class ReceiptStatus {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
+    }
+
+    public Collection<Receipt> getReceiptsById() {
+        return receiptsById;
+    }
+
+    public void setReceiptsById(Collection<Receipt> receiptsById) {
+        this.receiptsById = receiptsById;
     }
 }

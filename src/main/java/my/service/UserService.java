@@ -1,27 +1,52 @@
 package my.service;
 
-import my.dao.UserDao;
 import my.entity.User;
+import my.repo.RoleRepo;
+import my.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-@Component
+import java.util.List;
+import java.util.Optional;
+
+@Service
+@Transactional(readOnly = true)
 public class UserService {
-    private final UserDao userDao;
+    private final UserRepo userRepo;
+    private final RoleRepo roleRepo;
 
     @Autowired
-    public UserService(UserDao userDao) {
-        this.userDao = userDao;
+    public UserService(UserRepo userRepo, RoleRepo roleRepo) {
+        this.userRepo = userRepo;
+        this.roleRepo = roleRepo;
     }
 
-    public void add(User user){
-        userDao.add(user);
+    public List<User> getAll(){
+        return userRepo.findAll();
     }
 
-    public User getUser(int id) {
-        return userDao.get(id);
+    public User get(int id){
+        Optional<User> user = userRepo.findById(id);
+        return user.orElse(null);
     }
-    public User getUser(String email) {
-       return userDao.get(email);
+    public User get(String email){
+        Optional<User> user = userRepo.getUserByEmail(email);
+        return user.orElse(null);
+    }
+
+    @Transactional
+    public User save(User user){
+        user.setRoleByRoleId(roleRepo.getRoleByName("user"));
+        return userRepo.save(user);
+    }
+    @Transactional
+    public User update(int id, User user){
+        user.setId(id);
+        return userRepo.save(user);
+    }
+    @Transactional
+    public void delete(int id){
+        userRepo.deleteById(id);
     }
 }

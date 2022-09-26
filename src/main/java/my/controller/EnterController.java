@@ -2,33 +2,33 @@ package my.controller;
 
 import my.dto.UserLoginDto;
 import my.dto.UserSignupDto;
+import my.entity.User;
 import my.service.UserService;
-import my.util.UserLoginValidator;
-import my.util.UserSignupValidator;
+import my.util.UserAccessValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
 public class EnterController {
     private final UserService userService;
-    private final UserSignupValidator userSignupValidator;
-    private final UserLoginValidator userLoginValidator;
+    private final UserAccessValidator userAccessValidator;
 
     @Autowired
-    public EnterController(UserService userService, UserSignupValidator userSignupValidator, UserLoginValidator userLoginValidator) {
+    public EnterController(UserService userService, UserAccessValidator userAccessValidator) {
         this.userService = userService;
-        this.userSignupValidator = userSignupValidator;
-        this.userLoginValidator = userLoginValidator;
+        this.userAccessValidator = userAccessValidator;
     }
 
     @GetMapping("/")
-    public String index() {
+    public String index(HttpServletRequest request) {
+        request.getSession().invalidate();
         return "enter/index.html";
     }
 
@@ -38,12 +38,16 @@ public class EnterController {
     }
 
     @PostMapping("/login")
-    public String postLogin(@ModelAttribute("userDto") @Valid UserLoginDto userLoginDto, BindingResult bindingResult) {
-        userLoginValidator.validate(userLoginDto, bindingResult);
+    @Transactional//for lazy load
+    public String postLogin(HttpServletRequest request, @ModelAttribute("userDto") @Valid UserLoginDto userLoginDto, BindingResult bindingResult) {
+        userAccessValidator.validate(userLoginDto, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "enter/login.html";
         }
+
+        User user = userService.get(userLoginDto.getEmail());
+        putUserToSession(request,user);
 
         return "success.html";//must be redirect:
     }
@@ -54,14 +58,21 @@ public class EnterController {
     }
 
     @PostMapping("/signup")
-    public String postSignup(@ModelAttribute("userDto") @Valid UserSignupDto userSignupDto, BindingResult bindingResult) {
-        userSignupValidator.validate(userSignupDto, bindingResult);
+    public String postSignup(HttpServletRequest request, @ModelAttribute("userDto") @Valid UserSignupDto userSignupDto, BindingResult bindingResult) {
+        userAccessValidator.validate(userSignupDto, bindingResult);
 
         if (bindingResult.hasErrors()) {
             return "enter/signup.html";
         }
-
-        userService.add(userSignupDto.getUser());
+        User user = userSignupDto.getUser();
+        userService.save(user);
+        putUserToSession(request,user);
         return "success.html";//must be redirect:
+    }
+
+    public static void putUserToSession(HttpServletRequest request, User user){
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
+        session.setAttribute("id",user.getId());
     }
 }

@@ -1,6 +1,7 @@
 package my.entity;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Book {
@@ -20,6 +21,10 @@ public class Book {
     @Basic
     @Column(name = "rating", nullable = false, precision = 0)
     private Double rating;
+    @OneToMany(mappedBy = "bookByBookId")
+    private Collection<BookHasGenre> bookHasGenresById;
+    @OneToMany(mappedBy = "bookByBookId")
+    private Collection<Receipt> receiptsById;
 
     public Integer getId() {
         return id;
@@ -86,4 +91,21 @@ public class Book {
         result = 31 * result + (rating != null ? rating.hashCode() : 0);
         return result;
     }
+
+    public Collection<BookHasGenre> getBookHasGenresById() {
+        return bookHasGenresById;
+    }
+
+    public void setBookHasGenresById(Collection<BookHasGenre> bookHasGenresById) {
+        this.bookHasGenresById = bookHasGenresById;
+    }
+
+    public Collection<Receipt> getReceiptsById() {
+        return receiptsById;
+    }
+
+    public void setReceiptsById(Collection<Receipt> receiptsById) {
+        this.receiptsById = receiptsById;
+    }
+
 }

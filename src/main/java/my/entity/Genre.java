@@ -1,6 +1,7 @@
 package my.entity;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class Genre {
@@ -11,6 +12,8 @@ public class Genre {
     @Basic
     @Column(name = "name", nullable = false, length = 255)
     private String name;
+    @OneToMany(mappedBy = "genreByGenreId")
+    private Collection<BookHasGenre> bookHasGenresById;
 
     public Integer getId() {
         return id;
@@ -47,4 +50,13 @@ public class Genre {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         return result;
     }
+
+    public Collection<BookHasGenre> getBookHasGenresById() {
+        return bookHasGenresById;
+    }
+
+    public void setBookHasGenresById(Collection<BookHasGenre> bookHasGenresById) {
+        this.bookHasGenresById = bookHasGenresById;
+    }
+
 }

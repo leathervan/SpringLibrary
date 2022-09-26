@@ -1,6 +1,7 @@
 package my.entity;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 public class User {
@@ -17,16 +18,17 @@ public class User {
     @Basic
     @Column(name = "password", nullable = false, length = 32)
     private String password;
-    @Basic
-    @Column(name = "role_id", nullable = false)
-    private Integer roleId;
+    @OneToMany(mappedBy = "userByUserId")
+    private Collection<Receipt> receiptsById;
+    @ManyToOne
+    @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)
+    private Role roleByRoleId;
 
     public User() {}
-    public User(String email, String username, String password, Integer roleId) {
+    public User(String email, String username, String password) {
         this.email = email;
         this.username = username;
         this.password = password;
-        this.roleId = roleId;
     }
 
     public Integer getId() {
@@ -61,14 +63,6 @@ public class User {
         this.password = password;
     }
 
-    public Integer getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,7 +74,6 @@ public class User {
         if (email != null ? !email.equals(user.email) : user.email != null) return false;
         if (username != null ? !username.equals(user.username) : user.username != null) return false;
         if (password != null ? !password.equals(user.password) : user.password != null) return false;
-        if (roleId != null ? !roleId.equals(user.roleId) : user.roleId != null) return false;
 
         return true;
     }
@@ -91,18 +84,23 @@ public class User {
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
-        result = 31 * result + (roleId != null ? roleId.hashCode() : 0);
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", roleId=" + roleId +
-                '}';
+    public Collection<Receipt> getReceiptsById() {
+        return receiptsById;
     }
+
+    public void setReceiptsById(Collection<Receipt> receiptsById) {
+        this.receiptsById = receiptsById;
+    }
+
+    public Role getRoleByRoleId() {
+        return roleByRoleId;
+    }
+
+    public void setRoleByRoleId(Role roleByRoleId) {
+        this.roleByRoleId = roleByRoleId;
+    }
+
 }
