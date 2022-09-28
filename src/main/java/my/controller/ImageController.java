@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -16,7 +17,7 @@ public class ImageController {
     @RequestMapping(value = "/image/{imageName}")
     public void getImage(@PathVariable(value = "imageName") String imageName, HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("image/jpeg");
-        FileInputStream fis = new FileInputStream(request.getServletContext().getRealPath("") + "/img/" + imageName);
+        FileInputStream fis = new FileInputStream(request.getServletContext().getRealPath("") + "load\\pic" + File.separator + imageName);
         fis.transferTo(response.getOutputStream());
     }
 }

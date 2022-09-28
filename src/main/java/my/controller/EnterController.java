@@ -49,7 +49,7 @@ public class EnterController {
         User user = userService.get(userLoginDto.getEmail());
         putUserToSession(request,user);
 
-        return "success.html";//must be redirect:
+        return "redirect:/user/main";
     }
 
     @GetMapping("/signup")
@@ -67,7 +67,7 @@ public class EnterController {
         User user = userSignupDto.getUser();
         userService.save(user);
         putUserToSession(request,user);
-        return "success.html";//must be redirect:
+        return "redirect:/user/main";
     }
 
     public static void putUserToSession(HttpServletRequest request, User user){
