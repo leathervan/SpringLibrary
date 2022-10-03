@@ -3,7 +3,6 @@ package com.serhiiostapenko.OnlineLibrary.controller;
 import com.serhiiostapenko.OnlineLibrary.dto.BookDto;
 import com.serhiiostapenko.OnlineLibrary.entity.Book;
 import com.serhiiostapenko.OnlineLibrary.service.BookService;
-import com.serhiiostapenko.OnlineLibrary.service.FileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +17,10 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
     private final BookService bookService;
-    private final FileService fileService;
 
     @Autowired
-    public UserController(BookService bookService, FileService fileService) {
+    public UserController(BookService bookService) {
         this.bookService = bookService;
-        this.fileService = fileService;
     }
 
     @Transactional
@@ -45,7 +42,7 @@ public class UserController {
     public List<BookDto> convertToDto(List<Book> books){
         List<BookDto> bookDtos = new ArrayList<>();
         for (Book book : books){
-            bookDtos.add(new BookDto(book, fileService.get(book.getId())));
+            bookDtos.add(new BookDto(book, bookService.getBookFileByBookId(book.getId())));
         }
         return bookDtos;
     }

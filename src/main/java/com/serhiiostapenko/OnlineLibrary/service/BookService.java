@@ -1,8 +1,10 @@
 package com.serhiiostapenko.OnlineLibrary.service;
 
 import com.serhiiostapenko.OnlineLibrary.entity.Book;
+import com.serhiiostapenko.OnlineLibrary.entity.BookFile;
 import com.serhiiostapenko.OnlineLibrary.entity.BookHasGenre;
 import com.serhiiostapenko.OnlineLibrary.entity.Genre;
+import com.serhiiostapenko.OnlineLibrary.repo.BookFileRepo;
 import com.serhiiostapenko.OnlineLibrary.repo.BookHasGenreRepo;
 import com.serhiiostapenko.OnlineLibrary.repo.BookRepo;
 import com.serhiiostapenko.OnlineLibrary.repo.GenreRepo;
@@ -19,12 +21,14 @@ public class BookService {
     private final BookRepo bookRepo;
     private final GenreRepo genreRepo;
     private final BookHasGenreRepo bookHasGenreRepo;
+    private final BookFileRepo bookFileRepo;
 
     @Autowired
-    public BookService(BookRepo bookRepo, GenreRepo genreRepo, BookHasGenreRepo bookHasGenreRepo) {
+    public BookService(BookRepo bookRepo, GenreRepo genreRepo, BookHasGenreRepo bookHasGenreRepo, BookFileRepo bookFileRepo) {
         this.bookRepo = bookRepo;
         this.genreRepo = genreRepo;
         this.bookHasGenreRepo = bookHasGenreRepo;
+        this.bookFileRepo = bookFileRepo;
     }
     public List<Book> getAll(){
         return bookRepo.findAll();
@@ -59,6 +63,10 @@ public class BookService {
         return bookRepo.save(book);
     }
     @Transactional
+    public BookFile save(BookFile bookFile){
+        return bookFileRepo.save(bookFile);
+    }
+    @Transactional
     public Book update(int id, Book book){
         book.setId(id);
         return bookRepo.save(book);
@@ -72,5 +80,9 @@ public class BookService {
     public void deleteGenre(int bookId, int genreId) {
         BookHasGenre bookHasGenre = bookHasGenreRepo.findBookHasGenreByBook_IdAndGenre_Id(bookId,genreId);
         bookHasGenreRepo.delete(bookHasGenre);
+    }
+    public BookFile getBookFileByBookId(int id){
+        Optional<BookFile> bookFile = bookFileRepo.findBookFileByBook_Id(id);
+        return bookFile.orElse(null);
     }
 }

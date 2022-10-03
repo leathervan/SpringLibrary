@@ -48,7 +48,7 @@
                     <th style="padding: 15px;">
                         <div class="col mb-5">
                             <div class="card h-100">
-                                <!--<img alt="Image" th:src="@{/image/{id}(id=${book.file.getPic()})}" height="350" width="300"/>-->
+                                <img alt="Image" th:src="@{/book_image/{id}(id=${book.id})}" height="350" width="300"/>
                                 <div class="card-body p-4">
                                     <div class="text-center">
                                         <h6 th:text="${book.rating}"/>

@@ -54,7 +54,7 @@
                             <tr class="border-bottom">
                                 <td class="col-md-4">
                                     <div class="d-flex align-items-center">
-                                        <!--<img alt="Image" th:src="@{/image/{id}(id=${book.file.getPic()})}" height="200" width="150"/>-->
+                                        <img alt="Image" th:src="@{/book_image/{id}(id=${book.id})}" height="200" width="150"/>
                                         <div class="ps-3 d-flex flex-column justify-content">
                                             <p class="fw-bold" th:text="${book.name}"></p>
                                             <small class=" d-flex">

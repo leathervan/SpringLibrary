@@ -2,11 +2,12 @@ package com.serhiiostapenko.OnlineLibrary.dto;
 
 
 import com.serhiiostapenko.OnlineLibrary.entity.Book;
-import com.serhiiostapenko.OnlineLibrary.entity.File;
+import com.serhiiostapenko.OnlineLibrary.entity.BookFile;
 import com.serhiiostapenko.OnlineLibrary.entity.Genre;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class BookDto {
     private Integer id;
     private String name;
@@ -14,17 +15,31 @@ public class BookDto {
     private String description;
     private Double rating;
     private List<Genre> genres = new ArrayList<>();
-    private File file;
+    private BookFile bookFile;
 
-    public BookDto(Book book, File file) {
+    public BookDto(Book book, BookFile bookFile) {
         this.id = book.getId();
         this.name = book.getName();
         this.author = book.getAuthor();
         this.description = book.getDescription();
         this.rating = book.getRating();
-        this.file = file;
+        this.bookFile = bookFile;
     }
-    public BookDto() {}
+
+    public Book getBook() {
+        if (this.getRating() == null) this.setRating(0D);
+        return new Book(this.name, this.author, this.description, this.rating);
+    }
+
+    public void updateBook(Book book) {
+        if (!this.getName().isEmpty()) book.setName(this.getName());
+        if (!this.getAuthor().isEmpty()) book.setAuthor(this.getAuthor());
+        if (!this.getDescription().isEmpty()) book.setDescription(this.getDescription());
+        if (this.getRating() != null) book.setRating(this.getRating());
+    }
+
+    public BookDto() {
+    }
 
     public Integer getId() {
         return id;
@@ -74,12 +89,12 @@ public class BookDto {
         this.genres = genres;
     }
 
-    public File getFile() {
-        return file;
+    public BookFile getBookFile() {
+        return bookFile;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setBookFile(BookFile bookFile) {
+        this.bookFile = bookFile;
     }
 
     @Override
@@ -90,7 +105,7 @@ public class BookDto {
                 ", author='" + author + '\'' +
                 ", rating=" + rating +
                 ", genres=" + genres +
-                ", file=" + file +
+                ", file=" + bookFile +
                 '}';
     }
 }

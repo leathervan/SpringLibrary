@@ -15,6 +15,7 @@
 </nav>
 <section class="py-5">
     <div class="container px-7 px-lg-8 mt-8">
+        <a href="/admin/add" type="button" class="btn btn-outline-dark mt-auto">Add book</a>
         <table class="table">
             <thead>
             <tr>
@@ -23,6 +24,7 @@
                 <th scope="col">Author</th>
                 <th scope="col">Description</th>
                 <th scope="col">Rating</th>
+                <th scope="col"></th>
                 <th scope="col"></th>
             </tr>
             </thead>
@@ -34,6 +36,7 @@
                 <td th:text="${book.description}"></td>
                 <td th:text="${book.rating}"></td>
                 <td> <a class="btn btn-outline-dark mt-auto" th:href="@{/admin/edit/{id}(id=${book.id})}">Edit</a> </td>
+                <td> <a class="btn btn-outline-dark mt-auto" th:href="@{/admin/delete/{id}(id=${book.id})}">Delete</a> </td>
             </tr>
             </tbody>
         </table>

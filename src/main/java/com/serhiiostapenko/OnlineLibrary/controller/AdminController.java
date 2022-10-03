@@ -6,11 +6,15 @@ import com.serhiiostapenko.OnlineLibrary.entity.Book;
 import com.serhiiostapenko.OnlineLibrary.entity.BookHasGenre;
 import com.serhiiostapenko.OnlineLibrary.entity.Genre;
 import com.serhiiostapenko.OnlineLibrary.service.BookService;
+import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 
 @Controller
@@ -47,27 +51,37 @@ public class AdminController {
     @PostMapping("/edit/{id}")
     public String postEditBook(@PathVariable("id") int id, @ModelAttribute("bookDto") BookDto bookDto) {
         Book book = bookService.get(id);
-        updateBook(book, bookDto);
+        bookDto.updateBook(book);
         bookService.update(id, book);
         return "redirect:/admin/books";
     }
 
     @PostMapping("/add_genre/{bookId}/{genreId}")
-    public String postAddGenre(@PathVariable("bookId") int bookId,@PathVariable("genreId") int genreId) {
+    public String postAddGenre(@PathVariable("bookId") int bookId, @PathVariable("genreId") int genreId) {
         bookService.addGenre(new BookHasGenre(bookService.get(bookId), bookService.getGenre(genreId)));
         return "redirect:/admin/edit/" + bookId;
     }
 
     @PostMapping("/delete_genre/{bookId}/{genreId}")
-    public String postDeleteGenre(@PathVariable("bookId") int bookId,@PathVariable("genreId") int genreId) {
+    public String postDeleteGenre(@PathVariable("bookId") int bookId, @PathVariable("genreId") int genreId) {
         bookService.deleteGenre(bookId, genreId);
         return "redirect:/admin/edit/" + bookId;
     }
 
-    private static void updateBook(Book book, BookDto bookDto) {
-        if (!bookDto.getName().isEmpty()) book.setName(bookDto.getName());
-        if (!bookDto.getAuthor().isEmpty()) book.setAuthor(bookDto.getAuthor());
-        if (!bookDto.getDescription().isEmpty()) book.setDescription(bookDto.getDescription());
-        if (bookDto.getRating() != null) book.setRating(bookDto.getRating());
+    @GetMapping("/add")
+    public String getAddBook(@ModelAttribute("bookDto") BookDto bookDto) {
+        return "admin/add";
+    }
+    @PostMapping("/add")
+    public String postAddBook(@ModelAttribute("bookDto") BookDto bookDto) {
+        bookService.save(bookDto.getBook());
+        return "redirect:/admin/books";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String getDeleteBook(@PathVariable("id") int id) throws IOException {
+        bookService.delete(id);
+        FileUtils.deleteDirectory(new File("src/main/resources/static/upload/" + id));
+        return "redirect:/admin/books";
     }
 }

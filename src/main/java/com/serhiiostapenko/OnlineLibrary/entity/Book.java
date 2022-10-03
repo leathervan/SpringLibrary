@@ -36,8 +36,14 @@ public class Book {
     @OneToMany(mappedBy = "book")
     private Set<Receipt> receipts = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "book")
-    private Set<File> files = new LinkedHashSet<>();
+    public Book(String name, String author, String description, Double rating) {
+        this.name = name;
+        this.author = author;
+        this.description = description;
+        this.rating = rating;
+    }
+
+    public Book() {}
 
     public Integer getId() {
         return id;
@@ -85,14 +91,6 @@ public class Book {
 
     public void setReceipts(Set<Receipt> receipts) {
         this.receipts = receipts;
-    }
-
-    public Set<File> getFiles() {
-        return files;
-    }
-
-    public void setFiles(Set<File> files) {
-        this.files = files;
     }
 
     @Override
