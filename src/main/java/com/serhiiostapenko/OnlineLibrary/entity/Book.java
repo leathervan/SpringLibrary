@@ -1,6 +1,7 @@
 package com.serhiiostapenko.OnlineLibrary.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.LinkedHashSet;
@@ -15,26 +16,27 @@ public class Book {
     private Integer id;
 
     @Size(max = 255)
-    @NotNull
+    @NotNull(message = "Name shouldn`t be empty")
+    @NotBlank(message = "Name shouldn`t be empty")
     @Column(name = "name", nullable = false)
     private String name;
 
     @Size(max = 45)
-    @NotNull
+    @NotNull(message = "Author shouldn`t be empty")
+    @NotBlank(message = "Author shouldn`t be empty")
     @Column(name = "author", nullable = false, length = 45)
     private String author;
 
     @Size(max = 2000)
-    @NotNull
+    @NotNull(message = "Description shouldn`t be empty")
+    @NotBlank(message = "Description shouldn`t be empty")
     @Column(name = "description", nullable = false, length = 2000)
     private String description;
 
-    @NotNull
+    @NotNull(message = "Rating shouldn`t be empty")
     @Column(name = "rating", nullable = false)
     private Double rating;
 
-    @OneToMany(mappedBy = "book")
-    private Set<Receipt> receipts = new LinkedHashSet<>();
 
     public Book(String name, String author, String description, Double rating) {
         this.name = name;
@@ -83,14 +85,6 @@ public class Book {
 
     public void setRating(Double rating) {
         this.rating = rating;
-    }
-
-    public Set<Receipt> getReceipts() {
-        return receipts;
-    }
-
-    public void setReceipts(Set<Receipt> receipts) {
-        this.receipts = receipts;
     }
 
     @Override

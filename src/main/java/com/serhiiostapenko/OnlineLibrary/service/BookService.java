@@ -1,13 +1,9 @@
 package com.serhiiostapenko.OnlineLibrary.service;
 
 import com.serhiiostapenko.OnlineLibrary.entity.Book;
-import com.serhiiostapenko.OnlineLibrary.entity.BookFile;
-import com.serhiiostapenko.OnlineLibrary.entity.BookHasGenre;
-import com.serhiiostapenko.OnlineLibrary.entity.Genre;
-import com.serhiiostapenko.OnlineLibrary.repo.BookFileRepo;
-import com.serhiiostapenko.OnlineLibrary.repo.BookHasGenreRepo;
+import com.serhiiostapenko.OnlineLibrary.entity.FileEntity;
 import com.serhiiostapenko.OnlineLibrary.repo.BookRepo;
-import com.serhiiostapenko.OnlineLibrary.repo.GenreRepo;
+import com.serhiiostapenko.OnlineLibrary.repo.FileRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,70 +15,56 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class BookService {
     private final BookRepo bookRepo;
-    private final GenreRepo genreRepo;
-    private final BookHasGenreRepo bookHasGenreRepo;
-    private final BookFileRepo bookFileRepo;
+    private final FileRepo fileRepo;
 
     @Autowired
-    public BookService(BookRepo bookRepo, GenreRepo genreRepo, BookHasGenreRepo bookHasGenreRepo, BookFileRepo bookFileRepo) {
+    public BookService(BookRepo bookRepo, FileRepo fileRepo) {
         this.bookRepo = bookRepo;
-        this.genreRepo = genreRepo;
-        this.bookHasGenreRepo = bookHasGenreRepo;
-        this.bookFileRepo = bookFileRepo;
+        this.fileRepo = fileRepo;
     }
-    public List<Book> getAll(){
+    public List<Book> getAllBooks(){
         return bookRepo.findAll();
     }
-    public List<Genre> getAllGenres(){
-        return genreRepo.findAll();
-    }
-    public List<Genre> getAllGenresById(int id){
-        return genreRepo.findAllByBookId(id);
-    }
+    public List<Book> getAllByNameOrAuthor(String search) {return bookRepo.findAllByNameOrAuthor(search, search);}
 
-    public List<Book> getTop() {
+    public List<Book> getTop12Books() {
         return bookRepo.findTop12ByOrderByRatingDesc();
     }
-
-    public Book get(int id){
+    public Book getBook(int id){
         Optional<Book> book = bookRepo.findById(id);
         return book.orElse(null);
     }
-    public Genre getGenre(int id){
-        Optional<Genre> genre = genreRepo.findById(id);
-        return genre.orElse(null);
+    public FileEntity getFileByName(String name){
+        Optional<FileEntity> file= fileRepo.findByName(name);
+        return file.orElse(null);
+    }
+
+    public FileEntity getImageFileById(int id){
+        Optional<FileEntity> file= fileRepo.findByBookIdAndAndNameEndingWith(id, ".jpg");
+        return file.orElse(null);
+    }
+
+    public FileEntity getTxtFileById(int id){
+        Optional<FileEntity> file= fileRepo.findByBookIdAndAndNameEndingWith(id, ".txt");
+        return file.orElse(null);
     }
 
     @Transactional
-    public void addGenre(BookHasGenre bookHasGenre){
-        bookHasGenreRepo.save(bookHasGenre);
+    public Book saveBook(Book book){
+        return bookRepo.save(book);
+    }
+    @Transactional
+    public FileEntity saveFile(FileEntity file){
+        return fileRepo.save(file);
     }
 
     @Transactional
-    public Book save(Book book){
+    public Book updateBook(Book book){
         return bookRepo.save(book);
     }
     @Transactional
-    public BookFile save(BookFile bookFile){
-        return bookFileRepo.save(bookFile);
-    }
-    @Transactional
-    public Book update(int id, Book book){
-        book.setId(id);
-        return bookRepo.save(book);
-    }
-    @Transactional
-    public void delete(int id){
+    public void deleteBook(int id){
         bookRepo.deleteById(id);
     }
 
-    @Transactional
-    public void deleteGenre(int bookId, int genreId) {
-        BookHasGenre bookHasGenre = bookHasGenreRepo.findBookHasGenreByBook_IdAndGenre_Id(bookId,genreId);
-        bookHasGenreRepo.delete(bookHasGenre);
-    }
-    public BookFile getBookFileByBookId(int id){
-        Optional<BookFile> bookFile = bookFileRepo.findBookFileByBook_Id(id);
-        return bookFile.orElse(null);
-    }
 }
