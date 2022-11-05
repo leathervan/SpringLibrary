@@ -1,46 +1,45 @@
 package com.serhiiostapenko.OnlineLibrary.config;
 
 import com.serhiiostapenko.OnlineLibrary.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    private final UserService userService;
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
+public class SecurityConfig {
 
-    @Autowired
-    public SecurityConfig(UserService userService) {
-        this.userService = userService;
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.authorizeRequests()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/","/login","/signup", "/logo/**").permitAll()
+                .antMatchers("/auth/**", "/logo/**").permitAll()
                 .anyRequest().hasAnyRole("USER","ADMIN")
                 .and()
-                .formLogin().loginPage("/login")
-                .defaultSuccessUrl("/default", true)
-                .failureUrl("/login?error=true")
+                .formLogin().loginPage("/auth/login")
+                .defaultSuccessUrl("/auth/default", true)
+                .failureUrl("/auth/login?error=true")
                 .and()
                 .logout()
                 .logoutUrl("/logout")
-                .logoutSuccessUrl("/");
+                .logoutSuccessUrl("/")
+                .and()
+                .build();
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService)
-                .passwordEncoder(getPasswordEncoder());
+    @Bean
+    public AuthenticationManager authManager(HttpSecurity http, UserService userDetailService) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailService)
+                .passwordEncoder(getPasswordEncoder())
+                .and()
+                .build();
     }
 
     @Bean

@@ -10,11 +10,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/auth")
 public class EnterController {
     private final UserService userService;
     private final UserAccessValidator userAccessValidator;
@@ -25,7 +27,7 @@ public class EnterController {
         this.userAccessValidator = userAccessValidator;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public String index() {
         return "enter/index";
     }
@@ -50,7 +52,7 @@ public class EnterController {
 
         userService.register(userSignupDto.getUser(), ERole.ROLE_USER.name());
 
-        return "redirect:/default";
+        return "redirect:/auth/default";
     }
 
     @GetMapping("/default")
