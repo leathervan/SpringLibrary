@@ -69,7 +69,7 @@ public class FileController {
         }
     }
 
-    @GetMapping("/img/{name}")
+    @GetMapping("/logo/{name}")
     public @ResponseBody void getImage(@PathVariable("name") String name, HttpServletResponse response) throws IOException, NullPointerException {
         response.setContentType("image/jpeg");
         InputStream in = new FileInputStream(imgPath + name + ".jpg");

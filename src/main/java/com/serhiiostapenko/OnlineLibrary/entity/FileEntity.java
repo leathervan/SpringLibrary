@@ -1,12 +1,13 @@
 package com.serhiiostapenko.OnlineLibrary.entity;
 
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+@Data
 @Entity
 @Table(name = "file")
 public class FileEntity {
@@ -31,30 +32,6 @@ public class FileEntity {
         this.book = book;
     }
     public FileEntity() {}
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
 
     @Override
     public String toString() {

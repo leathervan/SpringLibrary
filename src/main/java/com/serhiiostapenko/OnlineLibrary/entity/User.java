@@ -1,12 +1,13 @@
 package com.serhiiostapenko.OnlineLibrary.entity;
 
+import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
+@Data
 @Entity
 @Table(name = "users")
 public class User {
@@ -20,18 +21,18 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Size(max = 16)
+    @Size(max = 45)
     @NotNull
-    @Column(name = "username", nullable = false, length = 16)
+    @Column(name = "username", nullable = false, length = 45)
     private String username;
 
-    @Size(max = 32)
+    @Size(max = 255)
     @NotNull
-    @Column(name = "password", nullable = false, length = 32)
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
@@ -42,46 +43,4 @@ public class User {
         this.username = username;
         this.password = password;
     }
-
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
 }

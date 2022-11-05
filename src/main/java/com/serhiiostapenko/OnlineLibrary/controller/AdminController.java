@@ -3,6 +3,7 @@ package com.serhiiostapenko.OnlineLibrary.controller;
 
 import com.serhiiostapenko.OnlineLibrary.entity.Book;
 import com.serhiiostapenko.OnlineLibrary.service.BookService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -15,7 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
-
+@Slf4j
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -33,6 +34,8 @@ public class AdminController {
         List<Book> books = bookService.getAllBooks();
         model.addAttribute("books", books);
 
+        log.info("Forwarding to /admin/books");
+
         return "admin/books";
     }
 
@@ -40,29 +43,36 @@ public class AdminController {
     public String getEditBook(@PathVariable("id") int id, Model model) {
         model.addAttribute("book", bookService.getBook(id));
 
+        log.info("Forwarding to /admin/edit/" + id);
+
         return "admin/edit";
     }
 
     @PostMapping("/edit/{id}")
     public String postEditBook(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            log.error("Bindingresult has errors");
             return "admin/edit";
         }
         book.setId(id);
         bookService.updateBook(book);
+        log.info("Updated book with id: " + id);
         return "redirect:/admin/books";
     }
 
     @GetMapping("/add")
     public String getAddBook(@ModelAttribute("book") Book book) {
+        log.info("Forwarding to /admin/add");
         return "admin/add";
     }
     @PostMapping("/add")
     public String postAddBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            log.error("Bindingresult has errors");
             return "admin/add";
         }
         bookService.saveBook(book);
+        log.info("Saved book");
         return "redirect:/admin/books";
     }
 
@@ -72,9 +82,10 @@ public class AdminController {
             Files.deleteIfExists(new File(uploadPath + bookService.getImageFileById(id).getName()).toPath());
             Files.deleteIfExists(new File(uploadPath + bookService.getTxtFileById(id).getName()).toPath());
         } catch (NullPointerException | IOException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
         bookService.deleteBook(id);
+        log.info("Deleted book with id: " + id);
         return "redirect:/admin/books";
     }
 }

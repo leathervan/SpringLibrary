@@ -1,6 +1,5 @@
 package com.serhiiostapenko.OnlineLibrary.util;
 
-import com.serhiiostapenko.OnlineLibrary.dto.UserLoginDto;
 import com.serhiiostapenko.OnlineLibrary.dto.UserSignupDto;
 import com.serhiiostapenko.OnlineLibrary.entity.User;
 import com.serhiiostapenko.OnlineLibrary.service.UserService;
@@ -25,14 +24,6 @@ public class UserAccessValidator implements Validator {
 
     @Override
     public void validate(Object target, Errors errors) {
-        if (target.getClass() == UserLoginDto.class) {
-            UserLoginDto userLoginDto = (UserLoginDto) target;
-            User user = userService.get(userLoginDto.getEmail());
-            if (user == null) errors.rejectValue("email", "", "User don't exist");
-            else if (!user.getPassword().equals(userLoginDto.getPassword()))
-                errors.rejectValue("password", "", "Wrong password");
-        }
-
         if (target.getClass() == UserSignupDto.class) {
             UserSignupDto userSignupDto = (UserSignupDto) target;
 
