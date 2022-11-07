@@ -3,6 +3,7 @@ package com.serhiiostapenko.OnlineLibrary.controller;
 
 import com.serhiiostapenko.OnlineLibrary.entity.FileEntity;
 import com.serhiiostapenko.OnlineLibrary.service.BookService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+@Slf4j
 @Controller
 public class FileController {
     @Value("${upload.path}")
@@ -52,6 +54,7 @@ public class FileController {
 
             Path path = Paths.get(uploadPath).resolve(filename);
             Files.copy(multipartFile.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Saved file with name: " + filename);
         }
 
         return "redirect:/admin/edit/" + id;
@@ -61,7 +64,10 @@ public class FileController {
     public @ResponseBody void getImage(@PathVariable("id") int id, HttpServletResponse response) throws IOException, NullPointerException {
         FileEntity image = bookService.getImageFileById(id);
         response.setContentType("image/jpeg");
-        if(image == null) getImage("not_found",response);
+        if(image == null) {
+            log.info("Image didn't found, set default image");
+            getImage("not_found", response);
+        }
         else {
             InputStream in = new FileInputStream(uploadPath + image.getName());
             IOUtils.copy(in, response.getOutputStream());
