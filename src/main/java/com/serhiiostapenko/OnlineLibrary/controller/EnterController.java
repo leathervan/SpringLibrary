@@ -25,10 +25,13 @@ public class EnterController {
     private final UserService userService;
     private final UserAccessValidator userAccessValidator;
 
+    private final ModelMapper modelMapper;
+
     @Autowired
-    public EnterController(UserService userService, UserAccessValidator userAccessValidator) {
+    public EnterController(UserService userService, UserAccessValidator userAccessValidator, ModelMapper modelMapper) {
         this.userService = userService;
         this.userAccessValidator = userAccessValidator;
+        this.modelMapper = modelMapper;
     }
 
     @GetMapping("")
@@ -78,6 +81,6 @@ public class EnterController {
     }
 
     private User convertToUser(UserSignupDto userSignupDto){
-        return new ModelMapper().map(userSignupDto, User.class);
+        return modelMapper.map(userSignupDto, User.class);
     }
 }
