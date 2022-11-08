@@ -18,8 +18,4 @@ public class UserSignupDto {
 
     @Size(min = 8, max = 30, message = "Password size should be between 8 and 30 symbols")
     private String password;
-
-    public User getUser() {
-        return new User(email,username,password);
-    }
 }

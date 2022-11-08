@@ -85,11 +85,17 @@ public class FileController {
 
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable("id") int id) throws IOException {
-        File downloadFile = new File(uploadPath + bookService.getTxtFileById(id).getName());
-        if (!downloadFile.exists()) {
+        File downloadFile;
+        try{
+            downloadFile = new File(uploadPath + bookService.getTxtFileById(id).getName());
+
+            if (!downloadFile.exists()) throw new NullPointerException();
+        } catch (NullPointerException e){
+            log.error("Not exist txt file with id: " + id);
             return ResponseEntity.noContent()
                     .build();
         }
+
         InputStreamResource resource = new InputStreamResource(new FileInputStream(downloadFile));
         HttpHeaders header = new HttpHeaders();
         header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + downloadFile.getName());

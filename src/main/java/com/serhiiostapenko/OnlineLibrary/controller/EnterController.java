@@ -2,9 +2,11 @@ package com.serhiiostapenko.OnlineLibrary.controller;
 
 import com.serhiiostapenko.OnlineLibrary.dto.UserSignupDto;
 import com.serhiiostapenko.OnlineLibrary.entity.ERole;
+import com.serhiiostapenko.OnlineLibrary.entity.User;
 import com.serhiiostapenko.OnlineLibrary.service.UserService;
 import com.serhiiostapenko.OnlineLibrary.util.UserAccessValidator;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -59,7 +61,7 @@ public class EnterController {
             return "enter/signup";
         }
 
-        userService.register(userSignupDto.getUser(), ERole.ROLE_USER.name());
+        userService.register(convertToUser(userSignupDto), ERole.ROLE_USER.name());
 
         log.info("Redirecting to /auth/default");
         return "redirect:/auth/default";
@@ -73,5 +75,9 @@ public class EnterController {
         }
         log.info("Forwarding to /user/main [USER]");
         return "redirect:/user/main";
+    }
+
+    private User convertToUser(UserSignupDto userSignupDto){
+        return new ModelMapper().map(userSignupDto, User.class);
     }
 }

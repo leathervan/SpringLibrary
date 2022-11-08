@@ -31,32 +31,31 @@ public class AdminController {
 
     @GetMapping("/books")
     public String getBooks(Model model) {
+        log.info("Forwarding to /admin/books");
+
         List<Book> books = bookService.getAllBooks();
         model.addAttribute("books", books);
-
-        log.info("Forwarding to /admin/books");
 
         return "admin/books";
     }
 
     @GetMapping("/edit/{id}")
     public String getEditBook(@PathVariable("id") int id, Model model) {
-        model.addAttribute("book", bookService.getBook(id));
-
         log.info("Forwarding to /admin/edit/" + id);
 
+        model.addAttribute("book", bookService.getBook(id));
         return "admin/edit";
     }
 
     @PostMapping("/edit/{id}")
     public String postEditBook(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+        log.info("Updating book with id: " + id);
         if (bindingResult.hasErrors()) {
             log.error("Bindingresult has errors");
             return "admin/edit";
         }
         book.setId(id);
         bookService.updateBook(book);
-        log.info("Updated book with id: " + id);
         return "redirect:/admin/books";
     }
 
@@ -67,17 +66,18 @@ public class AdminController {
     }
     @PostMapping("/add")
     public String postAddBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+        log.info("Saving book");
         if (bindingResult.hasErrors()) {
             log.error("Bindingresult has errors");
             return "admin/add";
         }
         bookService.saveBook(book);
-        log.info("Saved book");
         return "redirect:/admin/books";
     }
 
     @GetMapping("/delete/{id}")
     public String getDeleteBook(@PathVariable("id") int id) {
+        log.info("Deleting book with id: " + id);
         try {
             Files.deleteIfExists(new File(uploadPath + bookService.getImageFileById(id).getName()).toPath());
             Files.deleteIfExists(new File(uploadPath + bookService.getTxtFileById(id).getName()).toPath());
@@ -85,7 +85,6 @@ public class AdminController {
             log.error(e.getMessage());
         }
         bookService.deleteBook(id);
-        log.info("Deleted book with id: " + id);
         return "redirect:/admin/books";
     }
 }
