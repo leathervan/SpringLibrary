@@ -31,7 +31,7 @@ public class AdminController {
 
     @GetMapping("/books")
     public String getBooks(Model model) {
-        log.info("Forwarding to /admin/books");
+        log.info("Forwarded to /admin/books");
 
         List<Book> books = bookService.getAllBooks();
         model.addAttribute("books", books);
@@ -41,7 +41,7 @@ public class AdminController {
 
     @GetMapping("/edit/{id}")
     public String getEditBook(@PathVariable("id") int id, Model model) {
-        log.info("Forwarding to /admin/edit/" + id);
+        log.info("Forwarded to /admin/edit/" + id);
 
         model.addAttribute("book", bookService.getBook(id));
         return "admin/edit";
@@ -61,7 +61,7 @@ public class AdminController {
 
     @GetMapping("/add")
     public String getAddBook(@ModelAttribute("book") Book book) {
-        log.info("Forwarding to /admin/add");
+        log.info("Forwarded to /admin/add");
         return "admin/add";
     }
     @PostMapping("/add")

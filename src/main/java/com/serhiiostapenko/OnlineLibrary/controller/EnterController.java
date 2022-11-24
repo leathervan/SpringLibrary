@@ -36,19 +36,19 @@ public class EnterController {
 
     @GetMapping("")
     public String index() {
-        log.info("Forwarding to /auth/");
+        log.info("Forwarded to /auth/");
         return "enter/index";
     }
 
     @GetMapping("/login")
     public String getLogin() {
-        log.info("Forwarding to /auth/login");
+        log.info("Forwarded to /auth/login");
         return "enter/login";
     }
 
     @GetMapping("/signup")
     public String getSignup(@ModelAttribute("userDto") UserSignupDto userSignupDto) {
-        log.info("Forwarding to /auth/signup");
+        log.info("Forwarded to /auth/signup");
         return "enter/signup";
     }
 
@@ -56,7 +56,7 @@ public class EnterController {
     public String postSignup(@ModelAttribute("userDto") @Valid UserSignupDto userSignupDto, BindingResult bindingResult) {
         userAccessValidator.validate(userSignupDto, bindingResult);
 
-        log.info("Forwarding to /auth/signup [POST]");
+        log.info("Forwarded to /auth/signup [POST]");
 
         if (bindingResult.hasErrors()) {
             log.info("BindingResult has errors");
@@ -73,10 +73,10 @@ public class EnterController {
     @GetMapping("/default")
     public String defaultAfterLogin(HttpServletRequest request) {
         if (request.isUserInRole("ROLE_ADMIN")) {
-            log.info("Forwarding to /admin/books [ADMIN]");
+            log.info("Redirecting to /admin/books [ADMIN]");
             return "redirect:/admin/books";
         }
-        log.info("Forwarding to /user/main [USER]");
+        log.info("Redirecting to /user/main [USER]");
         return "redirect:/user/main";
     }
 

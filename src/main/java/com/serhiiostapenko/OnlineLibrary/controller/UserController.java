@@ -25,7 +25,7 @@ public class UserController {
     @Transactional
     @GetMapping("/main")
     public String getMain(Model model){
-        log.info("Forwarding to /user/main");
+        log.info("Forwarded to /user/main");
         List<Book> books = bookService.getTop12Books();
         model.addAttribute("books", books);
         return "user/main";
@@ -34,7 +34,7 @@ public class UserController {
     @Transactional
     @GetMapping("/books")
     public String getBooks(Model model){
-        log.info("Forwarding to /user/books");
+        log.info("Forwarded to /user/books");
         List<Book> books = bookService.getAllBooks();
         model.addAttribute("books", books);
         return "user/books";
@@ -50,7 +50,7 @@ public class UserController {
     }
     @GetMapping("/book/{id}")
     public String getBook(@PathVariable("id") int id, Model model){
-        log.info("Forwarding to /user/book/" + id);
+        log.info("Forwarded to /user/book/" + id);
         Book book = bookService.getBook(id);
         model.addAttribute("title", book.getName());
         model.addAttribute("book", book);
