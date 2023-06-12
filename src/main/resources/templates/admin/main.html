@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Books</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <div>
+            <img alt="Image" th:src="@{/image/navbar_logo.jpg}"/>
+            <a class="navbar-brand" href="/admin/main">Library</a>
+        </div>
+        <div>
+            <span class="nav-item">admin: </span>
+            <span class="nav-item" th:text="${session.user.name}"></span>
+            <span class="nav-item" th:text="${session.user.surname}"></span>
+        </div>
+        <form th:action="@{/logout}" method="get">
+            <input class="btn btn-outline-dark mt-auto" type="submit" value="Logout">
+        </form>
+    </div>
+</nav>
+<section class="py-5">
+    <div class="container px-7 px-lg-8 mt-8 d-flex justify-content-around">
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" alt="Image" th:src="@{/image/add_book.jpg}">
+            <div class="card-body">
+                <h5 class="card-title">Add new book</h5>
+                <p class="card-text">Insert new book to the library</p>
+                <a href="/admin/addbook" class="btn btn-secondary">Add</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" alt="Image" th:src="@{/image/edit_book.jpg}">
+            <div class="card-body">
+                <h5 class="card-title">Edit books list</h5>
+                <p class="card-text">Update existing list of books</p>
+                <a href="/admin/bookslist" class="btn btn-secondary">Edit</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" alt="Image" th:src="@{/image/customers.jpg}">
+            <div class="card-body">
+                <h5 class="card-title">Customer's view</h5>
+                <p class="card-text">Go to the customer's side of site</p>
+                <a href="/main" class="btn btn-secondary">Go</a>
+            </div>
+        </div>
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" alt="Image" th:src="@{/image/users.jpg}">
+            <div class="card-body">
+                <h5 class="card-title">Users list</h5>
+                <p class="card-text">Go to the list of users</p>
+                <a href="/admin/userslist" class="btn btn-secondary">Go</a>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

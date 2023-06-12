@@ -18,14 +18,23 @@
                                 <label class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"/>
                             </div>
                             <div class="form-outline mb-4">
-                                <label class="form-label" for="typePasswordX-2">password</label>
+                                <label class="form-label">password</label>
                                 <input th:field="*{password}" type="password" id="typePasswordX-2" name="password" class="form-control form-control-lg" />
                                 <label class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
                             </div>
                             <div class="form-outline mb-4">
-                                <label class="form-label" for="name">username</label>
-                                <input th:field="*{username}" type="text" id="name" name="name" class="form-control form-control-lg" />
-                                <label class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
+                                <label class="form-label">name</label>
+                                <input th:field="*{name}" type="text" id="name" name="name" class="form-control form-control-lg" />
+                                <label class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"/>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <label class="form-label">surname</label>
+                                <input th:field="*{surname}" type="text" id="surname" name="surname" class="form-control form-control-lg" />
+                                <label class="text-danger" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}"/>
+                            </div>
+                            <div class="form-outline mb-4">
+                                <label class="form-label">Grade</label>
+                                <input type="number" th:field="*{grade}" class="form-control" id="numberInput" name="numberInput" min="1" max="12">
                             </div>
                             <button class="btn btn-primary btn-lg btn-block" type="submit">Signup</button>
                             <a href="/auth/login" class="btn btn-lg btn-block btn-secondary" type="submit">Login</a>
