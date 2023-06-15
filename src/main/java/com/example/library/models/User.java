@@ -59,11 +59,12 @@ public class User implements BasicModel{
     )
     private List<Book> books = new ArrayList<>();
 
-    public User(String email, String name, String surname, String password, Integer grade) {
+    public User(String email, String name, String surname, String password, ERole role, Integer grade) {
         this.email = email;
         this.name = name;
         this.surname = surname;
         this.password = password;
+        this.role = role;
         if(grade == null) this.grade = EGrade.DEFAULT;
         else this.grade = EGrade.values()[grade];
     }

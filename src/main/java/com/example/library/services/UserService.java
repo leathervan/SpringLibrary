@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,6 @@ public class UserService{
 
     @Transactional
     public User save(User user) {
-        user.setRole(ERole.USER);
         FileEntity file = fileEntityRepo.save(new FileEntity());
         user.setAvatar(file);
         log.info("Saved user: " + user);
@@ -76,5 +76,9 @@ public class UserService{
         }
         fileStorageService.deleteFileFromDisk(user.getAvatar());
         userRepo.delete(user);
+    }
+
+    public List<User> findAllByRole(ERole role) {
+        return userRepo.findAllByRole(role);
     }
 }

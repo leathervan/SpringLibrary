@@ -108,6 +108,7 @@ public class BookService {
     @Transactional
     public void orderBook(User user, Book book) {
         if (book.getUsers().contains(user)) return;
+        if (book.getAmount() <= 0) return;
 
         book.addUser(user);
         book.setAmount(book.getAmount()-1);

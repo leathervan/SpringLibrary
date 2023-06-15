@@ -53,7 +53,8 @@ public class Book implements BasicModel{
         this.description = description;
         if(grade == null) this.grade = EGrade.DEFAULT;
         else this.grade = EGrade.values()[grade];
-        this.amount = amount;
+        if (amount < 0) this.amount = 0;
+        else this.amount = amount;
     }
 
     public void setFile(FileEntity file) {

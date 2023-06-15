@@ -40,6 +40,7 @@ public class EnterController {
         log.info("Forwarded to /auth/login");
         return "enter/login";
     }
+
     @PostMapping("/auth/login")
     public String postLogin(HttpServletRequest request, @ModelAttribute("userDto") @Valid UserLoginDto userLoginDto, BindingResult bindingResult) {
         log.info("Forwarded to /auth/login [POST]");
@@ -56,6 +57,7 @@ public class EnterController {
         session.setAttribute("user", user);
         return "redirect:/auth/default";
     }
+
     @GetMapping("/auth/signup")
     public String getSignup(@ModelAttribute("userDto") UserSignupDto userSignupDto) {
         log.info("Forwarded to /auth/signup");
@@ -73,7 +75,7 @@ public class EnterController {
             return "enter/signup";
         }
 
-        User user = new User(userSignupDto.getEmail(),userSignupDto.getName(), userSignupDto.getSurname(), userSignupDto.getPassword(), userSignupDto.getGrade());
+        User user = new User(userSignupDto.getEmail(), userSignupDto.getName(), userSignupDto.getSurname(), userSignupDto.getPassword(), ERole.USER, userSignupDto.getGrade());
         user = userService.save(user);
         HttpSession session = request.getSession();
         session.setAttribute("user", user);
